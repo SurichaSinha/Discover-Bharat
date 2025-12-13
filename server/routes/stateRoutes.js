@@ -30,6 +30,25 @@ router.get('/:id', async (req, res) => {
   }
 });
 
+//GET /api/states/byName/:stateName
+router.get("/byName/:stateName", async (req, res) => {
+  try {
+    const { stateName } = req.params;
+    // Case-insensitive search
+    const state = await State.findOne({
+      name: { $regex: new RegExp("^" + stateName + "$", "i") }
+    });
+    if (!state) {
+      return res.status(404).json({ msg: "State not found" });
+    }
+    res.json(state);
+  } catch (error) {
+    console.error("Error fetching state by name:", error);
+    res.status(500).json({ msg: "Server error" });
+  }
+});
+
+
 // @desc    Create state
 // @route   POST /api/states
 // @access  Admin

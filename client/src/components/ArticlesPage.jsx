@@ -116,192 +116,199 @@ const ArticlesPage = () => {
   }
 
   return (
-    <div className="container mx-auto px-4 py-8 max-w-4xl">
-      <h1 className="text-3xl font-bold text-center mb-8 text-blue-600">
+  
+  <div className="max-w-6xl mx-auto px-6 py-10">
+
+    {/* PAGE HEADING */}
+    <div className="text-center mb-12">
+      <h1 className="text-5xl font-extrabold text-transparent bg-clip-text 
+                     bg-gradient-to-r from-[#8c4b21] to-[#c57a31] mb-3">
         Share Your Knowledge
       </h1>
+      <p className="text-gray-600 text-lg">
+        Contribute articles about Indian culture, heritage & Swadeshi ideas.
+      </p>
+      <div className="w-24 h-1 bg-[#c57a31] mx-auto mt-3 rounded-full"></div>
+    </div>
 
-      {!user ? (
-        <div className="bg-white rounded-lg shadow-md p-8 text-center">
-          <h2 className="text-xl font-semibold mb-4">Authentication Required</h2>
-          <p className="text-gray-600 mb-6">
-            Please log in to submit articles for publication.
-          </p>
-          <a
-            href="/login"
-            className="bg-blue-500 text-white px-6 py-2 rounded-lg hover:bg-blue-600 transition-colors"
-          >
-            Log In
-          </a>
-        </div>
-      ) : (
-        <div className="bg-white rounded-lg shadow-md p-6">
-        <h2 className="text-xl font-semibold mb-4">Write an Article</h2>
+    {/* AUTH REQUIRED MESSAGE */}
+    {!user ? (
+      <div className="bg-white/80 backdrop-blur-sm shadow-lg border border-[#eadfcf] 
+                      rounded-2xl p-10 text-center">
+        <h2 className="text-2xl font-semibold text-[#623b22] mb-4">Login Required</h2>
         <p className="text-gray-600 mb-6">
-          Share your insights about Indian culture, heritage, or Swadeshi initiatives.
-          Your article will be reviewed before publication.
+          Please log in to submit articles for publication.
+        </p>
+        <a
+          href="/login"
+          className="bg-[#b35a17] text-white px-8 py-3 rounded-lg shadow hover:bg-[#9a4d14] transition"
+        >
+          Log In
+        </a>
+      </div>
+    ) : (
+      /* ARTICLE SUBMISSION FORM */
+      <div className="bg-white/90 backdrop-blur shadow-xl border border-[#eadfcf] rounded-2xl p-8 mb-12">
+
+        <div className="flex items-center gap-4 mb-6">
+          <div className="h-12 w-12 rounded-full bg-[#f7dfc8] flex items-center justify-center text-xl">📝</div>
+          <h2 className="text-2xl font-bold text-[#623b22]">Write an Article</h2>
+        </div>
+
+        <p className="text-gray-600 mb-6">
+          Your article will be reviewed before publication. Share factual and respectful content.
         </p>
 
         <form onSubmit={handleSubmit} className="space-y-6">
+          {/* TITLE */}
           <div>
-            <label htmlFor="title" className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-semibold text-[#623b22] mb-2">
               Article Title *
             </label>
             <input
               type="text"
-              id="title"
               name="title"
               value={formData.title}
               onChange={handleInputChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              className="w-full px-4 py-3 border border-[#d9c6ae] bg-[#faf5ee] rounded-xl 
+                         focus:ring-2 focus:ring-[#b35a17] outline-none"
               placeholder="Enter an engaging title"
-              required
             />
           </div>
 
+          {/* CONTENT */}
           <div>
-            <label htmlFor="content" className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-semibold text-[#623b22] mb-2">
               Article Content *
             </label>
             <textarea
-              id="content"
               name="content"
+              rows={10}
               value={formData.content}
               onChange={handleInputChange}
-              rows={12}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              placeholder="Write your article content here..."
-              required
+              className="w-full px-4 py-3 border border-[#d9c6ae] bg-[#faf5ee] rounded-xl 
+                         focus:ring-2 focus:ring-[#b35a17] outline-none"
+              placeholder="Write your article here..."
             />
-            <p className="text-sm text-gray-500 mt-1">
-              Minimum 100 characters. You can use basic formatting.
-            </p>
+            <p className="text-xs text-gray-500 mt-1">Minimum 100 characters.</p>
           </div>
 
+          {/* MESSAGE */}
           {message && (
-            <div className={`p-4 rounded-md ${
+            <div className={`p-4 rounded-xl text-sm ${
               message.includes('Error')
-                ? 'bg-red-50 text-red-700 border border-red-200'
-                : 'bg-green-50 text-green-700 border border-green-200'
+                ? 'bg-red-100 text-red-700 border border-red-200'
+                : 'bg-green-100 text-green-700 border border-green-200'
             }`}>
               {message}
             </div>
           )}
 
+          {/* SUBMIT BUTTON */}
           <button
             type="submit"
             disabled={submitting || formData.content.length < 100}
-            className="w-full bg-blue-500 text-white py-3 px-4 rounded-md hover:bg-blue-600 disabled:bg-blue-300 disabled:cursor-not-allowed transition-colors font-medium text-lg"
-          >
+            className="w-full bg-[#b35a17] text-white py-3 rounded-xl shadow-md 
+                       hover:bg-[#9a4d14] disabled:bg-[#d1a27c] disabled:cursor-not-allowed 
+                       transition text-lg font-semibold">
             {submitting ? 'Submitting...' : 'Submit Article'}
           </button>
         </form>
 
-          <div className="mt-6 p-4 bg-blue-50 rounded-md">
-            <h3 className="font-medium text-blue-800 mb-2">Submission Guidelines:</h3>
-            <ul className="text-sm text-blue-700 space-y-1">
-              <li>• Articles should be original and respectful</li>
-              <li>• Focus on Indian culture, heritage, or Swadeshi topics</li>
-              <li>• Minimum 100 characters required</li>
-              <li>• All submissions are reviewed before publication</li>
-            </ul>
-          </div>
-        </div>
-      )}
-
-      {/* Articles Display Section */}
-      <div className="mt-12">
-        <h2 className="text-2xl font-bold text-center mb-8 text-blue-600">
-          Published Articles
-        </h2>
-
-        {/* Search Bar */}
-        <div className="mb-8">
-          <div className="max-w-md mx-auto">
-            <div className="relative">
-              <input
-                type="text"
-                placeholder="Search articles by title, content, or author..."
-                value={searchTerm}
-                onChange={handleSearchChange}
-                className="w-full px-4 py-3 pl-12 border border-gray-300 rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
-              />
-              <div className="absolute inset-y-0 left-0 pl-3 flex items-center pointer-events-none">
-                <svg className="h-5 w-5 text-gray-400" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M21 21l-6-6m2-5a7 7 0 11-14 0 7 7 0 0114 0z" />
-                </svg>
-              </div>
-            </div>
-          </div>
+        {/* GUIDELINES */}
+        <div className="mt-8 p-5 bg-[#fff4e3] rounded-xl border border-[#e6ceb0]">
+          <h3 className="font-semibold text-[#623b22] mb-2">Submission Guidelines:</h3>
+          <ul className="text-sm text-gray-700 space-y-1">
+            <li>• Articles should be original and respectful</li>
+            <li>• Focus on Indian culture, heritage, or Swadeshi topics</li>
+            <li>• Minimum 100 characters required</li>
+            <li>• All submissions are reviewed before publication</li>
+          </ul>
         </div>
 
-        {/* Articles Grid */}
-        {filteredArticles.length === 0 ? (
-          <div className="text-center py-12">
-            <div className="text-gray-500 text-lg mb-2">
-              {searchTerm ? 'No articles found matching your search.' : 'No published articles yet.'}
-            </div>
-            {searchTerm && (
-              <button
-                onClick={() => setSearchTerm('')}
-                className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-lg hover:bg-blue-600 transition-colors"
-              >
-                Clear Search
-              </button>
-            )}
-          </div>
-        ) : (
-          <>
-            <div className="text-center mb-6 text-gray-600">
-              {searchTerm ? (
-                <p>Found {filteredArticles.length} article{filteredArticles.length !== 1 ? 's' : ''} matching "{searchTerm}"</p>
-              ) : (
-                <p>Showing all {filteredArticles.length} published article{filteredArticles.length !== 1 ? 's' : ''}</p>
-              )}
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
-              {filteredArticles.map(article => (
-                <div key={article._id} className="bg-white rounded-lg shadow-md overflow-hidden hover:shadow-lg transition-shadow duration-300">
-                  {/* Article Header */}
-                  <div className="bg-blue-50 px-4 py-3 border-b border-gray-200">
-                    <h3 className="text-lg font-semibold text-gray-800 mb-1 overflow-hidden text-ellipsis">
-                      {article.title.length > 50 ? `${article.title.substring(0, 50)}...` : article.title}
-                    </h3>
-                    <p className="text-sm text-blue-600 font-medium">
-                      By {article.authorName || 'Anonymous'}
-                    </p>
-                  </div>
-
-                  {/* Article Content Preview */}
-                  <div className="p-4">
-                    <p className="text-gray-700 text-sm mb-3">
-                      {article.content.length > 120 ? `${article.content.substring(0, 120)}...` : article.content}
-                    </p>
-
-                    {/* Read More Button */}
-                    <button
-                      onClick={() => {/* TODO: Navigate to full article */}}
-                      className="text-blue-600 hover:text-blue-800 text-sm font-medium transition-colors"
-                    >
-                      Read More →
-                    </button>
-                  </div>
-
-                  {/* Article Footer */}
-                  <div className="px-4 py-2 bg-gray-50 border-t border-gray-200">
-                    <p className="text-xs text-gray-500 text-right">
-                      {new Date(article.createdAt).toLocaleDateString()}
-                    </p>
-                  </div>
-                </div>
-              ))}
-            </div>
-          </>
-        )}
       </div>
+    )}
+
+    {/* PUBLISHED ARTICLES */}
+    <div className="mb-12">
+      <h2 className="text-3xl font-bold text-center text-[#8c4b21] mb-6">Published Articles</h2>
+
+      {/* SEARCH BAR */}
+      <div className="max-w-lg mx-auto mb-10">
+        <div className="relative">
+          <input
+            type="text"
+            value={searchTerm}
+            onChange={handleSearchChange}
+            placeholder="Search by title, content, or author..."
+            className="w-full px-4 py-3 pl-12 border border-[#d5c3b1] bg-white rounded-xl shadow-sm 
+                       focus:ring-2 focus:ring-[#b35a17] outline-none"
+          />
+          <span className="absolute left-4 top-3 text-gray-500">🔍</span>
+        </div>
+      </div>
+
+      {/* NO ARTICLES */}
+      {filteredArticles.length === 0 ? (
+        <div className="text-center py-16 bg-white/70 rounded-xl shadow-md border border-[#eadfcf]">
+          <div className="text-gray-600 text-lg mb-4">No matching articles found.</div>
+          {searchTerm && (
+            <button
+              onClick={() => setSearchTerm('')}
+              className="bg-[#b35a17] text-white px-6 py-2 rounded-lg hover:bg-[#9a4d14] transition"
+            >
+              Clear Search
+            </button>
+          )}
+        </div>
+      ) : (
+        <>
+          <p className="text-center text-gray-700 mb-6">
+            Showing <span className="font-semibold">{filteredArticles.length}</span> articles
+          </p>
+
+          {/* ARTICLE GRID */}
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+            {filteredArticles.map(article => (
+              <div
+                key={article._id}
+                className="bg-white rounded-xl shadow-lg border border-[#eadfcf] overflow-hidden 
+                           hover:shadow-xl transition-all"
+              >
+                <div className="bg-[#faf5ee] px-5 py-4 border-b border-[#e6d8c7]">
+                  <h3 className="text-lg font-semibold text-[#623b22] mb-1">
+                    {article.title}
+                  </h3>
+                  <p className="text-sm text-[#a15a2d] font-medium">
+                    By {article.authorName || "Anonymous"}
+                  </p>
+                </div>
+
+                <div className="p-5">
+                  <p className="text-gray-700 text-sm mb-3 leading-relaxed">
+                    {article.content.length > 120
+                      ? article.content.substring(0, 120) + "..."
+                      : article.content}
+                  </p>
+
+                  <button className="text-[#b35a17] hover:text-[#8c4b21] text-sm font-semibold">
+                    Read More →
+                  </button>
+                </div>
+
+                <div className="px-5 py-3 bg-[#faf5ee] border-t border-[#e6d8c7] text-right text-xs text-gray-600">
+                  {new Date(article.createdAt).toLocaleDateString()}
+                </div>
+              </div>
+            ))}
+          </div>
+        </>
+      )}
     </div>
-  );
+
+  </div>
+);
+
 };
 
 export default ArticlesPage;
