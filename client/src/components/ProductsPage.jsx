@@ -9,7 +9,6 @@ const ProductsPage = () => {
   const [categoryFilter, setCategoryFilter] = useState('');
   const [stateFilter, setStateFilter] = useState('');
 
-  // Unique categories and states for filter options
   const [categories, setCategories] = useState([]);
   const [states, setStates] = useState([]);
 
@@ -18,15 +17,12 @@ const ProductsPage = () => {
       try {
         const response = await api.get('/api/products');
         const productsData = response.data;
+
         setProducts(productsData);
         setFilteredProducts(productsData);
 
-        // Extract unique categories and states using Set and spread operator
-        const uniqueCategories = [...new Set(productsData.map(product => product.category))];
-        const uniqueStates = [...new Set(productsData.map(product => product.stateOfOrigin))];
-
-        setCategories(uniqueCategories);
-        setStates(uniqueStates);
+        setCategories([...new Set(productsData.map(p => p.category))]);
+        setStates([...new Set(productsData.map(p => p.stateOfOrigin))]);
       } catch (error) {
         console.error('Error fetching products:', error);
       } finally {
@@ -37,30 +33,14 @@ const ProductsPage = () => {
     fetchProducts();
   }, []);
 
-  // Filter products when filters change
   useEffect(() => {
     let filtered = products;
 
-    // Use filter() method for category filtering
-    if (categoryFilter) {
-      filtered = filtered.filter(product => product.category === categoryFilter);
-    }
-
-    // Use filter() method for state filtering
-    if (stateFilter) {
-      filtered = filtered.filter(product => product.stateOfOrigin === stateFilter);
-    }
+    if (categoryFilter) filtered = filtered.filter(p => p.category === categoryFilter);
+    if (stateFilter) filtered = filtered.filter(p => p.stateOfOrigin === stateFilter);
 
     setFilteredProducts(filtered);
   }, [products, categoryFilter, stateFilter]);
-
-  const handleCategoryChange = (e) => {
-    setCategoryFilter(e.target.value);
-  };
-
-  const handleStateChange = (e) => {
-    setStateFilter(e.target.value);
-  };
 
   const clearFilters = () => {
     setCategoryFilter('');
@@ -69,89 +49,98 @@ const ProductsPage = () => {
 
   if (loading) {
     return (
-      <div className="container mx-auto px-4 py-8">
-        <div className="flex justify-center items-center min-h-64">
-          <div className="text-xl text-gray-600">Loading products...</div>
-        </div>
+      <div className="container mx-auto px-4 py-20 text-center text-xl text-gray-600">
+        Loading products...
       </div>
     );
   }
 
   return (
-    <div className="container mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold text-center mb-8 text-blue-600">
+    <div className="container mx-auto px-6 py-12">
+
+      {/* Page Title */}
+      <h1 className="text-4xl font-bold text-center text-[#8c4b21] mb-10">
         Swadeshi Products
       </h1>
+      <div className="w-28 h-1 bg-[#d9b28c] mx-auto mb-10 rounded-full"></div>
 
-      {/* Filters */}
-      <div className="bg-white rounded-lg shadow-md p-6 mb-8">
-        <div className="flex flex-col md:flex-row gap-4 items-end">
+      {/* Filter Box */}
+      <div className="bg-white border border-[#eadfcf] rounded-xl shadow-md p-8 mb-10">
+        <h2 className="text-xl font-semibold text-[#623b22] mb-4">Filter Products</h2>
+
+        <div className="flex flex-col md:flex-row gap-6">
+
+          {/* Category Filter */}
           <div className="flex-1">
-            <label htmlFor="category" className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-semibold text-[#623b22] mb-1">
               Filter by Category
             </label>
             <select
-              id="category"
               value={categoryFilter}
-              onChange={handleCategoryChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              onChange={(e) => setCategoryFilter(e.target.value)}
+              className="w-full px-4 py-2 border border-[#d8c3a5] rounded-lg bg-[#fdf8f2]
+                         shadow-sm focus:ring-2 focus:ring-[#b35a17] outline-none"
             >
               <option value="">All Categories</option>
               {categories.map(category => (
-                <option key={category} value={category}>{category}</option>
+                <option key={category}>{category}</option>
               ))}
             </select>
           </div>
 
+          {/* State Filter */}
           <div className="flex-1">
-            <label htmlFor="state" className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-semibold text-[#623b22] mb-1">
               Filter by State
             </label>
             <select
-              id="state"
               value={stateFilter}
-              onChange={handleStateChange}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              onChange={(e) => setStateFilter(e.target.value)}
+              className="w-full px-4 py-2 border border-[#d8c3a5] rounded-lg bg-[#fdf8f2]
+                         shadow-sm focus:ring-2 focus:ring-[#b35a17] outline-none"
             >
               <option value="">All States</option>
               {states.map(state => (
-                <option key={state} value={state}>{state}</option>
+                <option key={state}>{state}</option>
               ))}
             </select>
           </div>
 
+          {/* Clear Filters Button */}
           <button
             onClick={clearFilters}
-            className="px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 transition-colors"
+            className="px-5 py-2 bg-[#354155] text-white rounded-lg shadow 
+                       hover:bg-[#2b3545] transition h-fit"
           >
             Clear Filters
           </button>
         </div>
 
-        <div className="mt-4 text-sm text-gray-600">
-          Showing {filteredProducts.length} of {products.length} products
+        {/* Showing Count */}
+        <div className="mt-4 text-sm text-gray-700">
+          Showing <span className="font-semibold">{filteredProducts.length}</span> of {products.length} products
           {(categoryFilter || stateFilter) && (
-            <span className="ml-2">
+            <span className="ml-2 text-[#623b22] font-medium">
               {categoryFilter && `• Category: ${categoryFilter}`}
-              {stateFilter && `• State: ${stateFilter}`}
+              {stateFilter && ` • State: ${stateFilter}`}
             </span>
           )}
         </div>
       </div>
 
-      {/* Products Grid */}
+      {/* Product Grid */}
       {filteredProducts.length === 0 ? (
-        <div className="text-center py-12">
-          <div className="text-gray-500 text-lg">No products found matching your filters.</div>
+        <div className="text-center py-16 bg-white rounded-xl shadow-md">
+          <p className="text-gray-500 text-lg mb-4">No products found.</p>
           <button
             onClick={clearFilters}
-            className="mt-4 px-4 py-2 bg-blue-500 text-white rounded-md hover:bg-blue-600 transition-colors"
+            className="px-5 py-2 bg-[#b35a17] text-white rounded-lg shadow hover:bg-[#9a4d14] transition"
           >
-            Clear Filters
+            Reset Filters
           </button>
         </div>
       ) : (
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-6">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
           {filteredProducts.map(product => (
             <ProductCard key={product._id} product={product} />
           ))}
