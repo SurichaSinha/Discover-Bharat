@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import api from '../api/axios';
 import mapbanner from '../image/mapbanner.jpg';
+import IndiaMap from "../components/IndiaMap";
 
 const MapPage = () => {
   const [states, setStates] = useState([]);
@@ -68,6 +69,22 @@ const MapPage = () => {
             Explore India
           </h1>
         </div>
+
+        <IndiaMap
+            onStateClick={async (stateName) => {
+            try {
+              const res = await api.get(`/api/states/byName/${stateName}`);
+              setSelectedState(res.data._id);
+              setStateDetails(res.data);
+            } catch (error) {
+              console.error("State fetch error", error);
+              }
+            console.log("Clicked state:", stateName);
+          }
+          
+        }
+/>
+
 
         {/* CARD GRID */}
         <div className="bg-white rounded-xl shadow-xl p-7 border border-[#e7d8c7]">
