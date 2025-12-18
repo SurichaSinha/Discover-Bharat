@@ -9,6 +9,7 @@ const connectDB = require('./config/db');
 const authRoutes = require('./routes/authRoutes');
 const stateRoutes = require('./routes/stateRoutes');
 const productRoutes = require('./routes/productRoutes');
+const vendorRoutes = require('./routes/vendorRoutes');
 const innovationRoutes = require('./routes/innovationRoutes');
 const articleRoutes = require('./routes/articleRoutes');
 
@@ -59,6 +60,7 @@ connectDB();
 app.use('/api/auth', authRoutes);
 app.use('/api/states', stateRoutes);
 app.use('/api/products', productRoutes);
+app.use('/api/vendors', vendorRoutes);
 app.use('/api/innovations', innovationRoutes);
 app.use('/api/articles', articleRoutes);
 

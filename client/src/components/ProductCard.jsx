@@ -1,15 +1,32 @@
+import { useNavigate } from 'react-router-dom';
+
 const ProductCard = ({ product }) => {
-  const handleLinkClick = () => {
-    if (product.link) {
-      window.open(product.link, "_blank", "noopener,noreferrer");
-    }
+  const navigate = useNavigate();
+
+  const handleCardClick = () => {
+    navigate(`/products/${product._id}`);
   };
 
   return (
     <div
+      onClick={handleCardClick}
       className="bg-white rounded-2xl shadow-md border border-[#eadfcf] overflow-hidden
-                 hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
+                 hover:shadow-xl hover:-translate-y-1 transition-all duration-300 cursor-pointer"
     >
+      {/* Product Image */}
+      {product.imageUrl && (
+        <div className="h-48 overflow-hidden">
+          <img
+            src={product.imageUrl}
+            alt={product.name}
+            className="w-full h-full object-cover hover:scale-105 transition-transform duration-300"
+            onError={(e) => {
+              e.target.src = 'https://via.placeholder.com/400x300?text=No+Image';
+            }}
+          />
+        </div>
+      )}
+
       {/* Product Header */}
       <div className="bg-[#f7ede2] px-5 py-4 border-b border-[#e6d4bf]">
         <h3 className="text-xl font-semibold text-[#623b22]">
@@ -29,7 +46,7 @@ const ProductCard = ({ product }) => {
         {/* Category Badge */}
         <div className="mb-5">
           <span
-            className="inline-block bg-[#f3e1c4] text-[#8c4b21] text-xs px-3 py-1 
+            className="inline-block bg-[#f3e1c4] text-[#8c4b21] text-xs px-3 py-1
                        rounded-full font-semibold shadow-sm"
           >
             {product.category}
@@ -37,15 +54,12 @@ const ProductCard = ({ product }) => {
         </div>
 
         {/* Action Button */}
-        {product.link && (
-          <button
-            onClick={handleLinkClick}
-            className="w-full bg-[#b35a17] text-white py-2.5 rounded-lg shadow 
-                       hover:bg-[#9a4d14] transition font-medium"
-          >
-            View Product
-          </button>
-        )}
+        <button
+          className="w-full bg-[#b35a17] text-white py-2.5 rounded-lg shadow
+                     hover:bg-[#9a4d14] transition font-medium"
+        >
+          View Details
+        </button>
       </div>
 
       {/* Footer */}
