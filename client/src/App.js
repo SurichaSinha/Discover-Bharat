@@ -6,6 +6,8 @@ import Navbar from './components/Navbar';
 import Footer from './components/Footer';
 import MapPage from './components/MapPage';
 import ProductsPage from './components/ProductsPage';
+import ProductDetailPage from './components/ProductDetailPage';
+import AddProductForm from './components/AddProductForm';
 import InnovationPage from './components/InnovationPage';
 import ArticlesPage from './components/ArticlesPage';
 import AdminArticles from './components/AdminArticles';
@@ -31,7 +33,9 @@ function App() {
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/map" element={<MapPage />} />
+              <Route path="/products/add" element={<AddProductForm />} />
               <Route path="/products" element={<ProductsPage />} />
+              <Route path="/products/:productId" element={<ProductDetailPage />} />
               <Route path="/innovations" element={<InnovationPage />} />
               <Route path="/articles" element={<ArticlesPage />} />
               <Route path="/login" element={<Login />} />

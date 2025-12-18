@@ -1,4 +1,5 @@
 import { useState, useEffect } from 'react';
+import { Link } from 'react-router-dom';
 import api from '../api/axios';
 import mapbanner from '../image/mapbanner.jpg';
 import IndiaMap from "../components/IndiaMap";
@@ -9,11 +10,54 @@ const MapPage = () => {
   const [loading, setLoading] = useState(true);
   const [stateDetails, setStateDetails] = useState(null);
   const [detailsLoading, setDetailsLoading] = useState(false);
+  const [innovations, setInnovations] = useState([]);
+  const [products, setProducts] = useState([]);
+  const [articles, setArticles] = useState([]);
+
+  // Mapping for GeoJSON state names to database state names
+  const stateNameMapping = {
+    "Tamil Nādu": "Tamil Nadu",
+    "Andhra Pradesh": "Andhra Pradesh",
+    "Arunachal Pradesh": "Arunachal Pradesh",
+    "Assam": "Assam",
+    "Bihar": "Bihar",
+    "Chhattisgarh": "Chhattisgarh",
+    "Goa": "Goa",
+    "Gujarat": "Gujarat",
+    "Haryana": "Haryana",
+    "Himachal Pradesh": "Himachal Pradesh",
+    "Jharkhand": "Jharkhand",
+    "Karnataka": "Karnataka",
+    "Kerala": "Kerala",
+    "Madhya Pradesh": "Madhya Pradesh",
+    "Maharashtra": "Maharashtra",
+    "Manipur": "Manipur",
+    "Meghalaya": "Meghalaya",
+    "Mizoram": "Mizoram",
+    "Nagaland": "Nagaland",
+    "Odisha": "Odisha",
+    "Punjab": "Punjab",
+    "Rajasthan": "Rajasthan",
+    "Sikkim": "Sikkim",
+    "Telangana": "Telangana",
+    "Tripura": "Tripura",
+    "Uttar Pradesh": "Uttar Pradesh",
+    "Uttarakhand": "Uttarakhand",
+    "West Bengal": "West Bengal",
+    "Andaman and Nicobar Islands": "Andaman and Nicobar Islands",
+    "Chandigarh": "Chandigarh",
+    "Dadra and Nagar Haveli and Daman and Diu": "Dadra and Nagar Haveli and Daman and Diu",
+    "Delhi": "Delhi",
+    "Jammu and Kashmir": "Jammu and Kashmir",
+    "Ladakh": "Ladakh",
+    "Lakshadweep": "Lakshadweep",
+    "Puducherry": "Puducherry"
+  };
 
   useEffect(() => {
     const fetchStates = async () => {
       try {
-        const response = await api.get('/api/states');
+        const response = await api.get('/states');
         setStates(response.data);
       } catch (error) {
         console.error("Error fetching states:", error);
@@ -28,11 +72,26 @@ const MapPage = () => {
   const handleStateClick = async (id) => {
     setDetailsLoading(true);
     try {
-      const response = await api.get(`/api/states/${id}`);
-      setStateDetails(response.data);
+      const stateResponse = await api.get(`/states/${id}`);
+      setStateDetails(stateResponse.data);
+
+      // Fetch innovations, products, and articles for the state
+      const stateName = stateResponse.data.name;
+      const [innovationsRes, productsRes, articlesRes] = await Promise.all([
+        api.get(`/innovations/state/${encodeURIComponent(stateName)}`),
+        api.get(`/products?state=${encodeURIComponent(stateName)}`),
+        api.get('/articles') // Get all articles since they don't have state field
+      ]);
+
+      setInnovations(innovationsRes.data);
+      setProducts(productsRes.data);
+      setArticles(articlesRes.data);
     } catch (error) {
       console.error("Error fetching details:", error);
       setStateDetails(null);
+      setInnovations([]);
+      setProducts([]);
+      setArticles([]);
     } finally {
       setDetailsLoading(false);
     }
@@ -41,6 +100,20 @@ const MapPage = () => {
   const handleListClick = (state) => {
     setSelectedState(state._id);
     handleStateClick(state._id);
+  };
+
+  const handleMapClick = async (stateName) => {
+    try {
+      // Map GeoJSON state name to database state name
+      const dbStateName = stateNameMapping[stateName] || stateName;
+      const res = await api.get(`/states/byName/${encodeURIComponent(dbStateName)}`);
+      setSelectedState(res.data._id);
+      handleStateClick(res.data._id);
+    } catch (error) {
+      console.error("State fetch error", error);
+      console.log("State name from map:", stateName);
+      console.log("Mapped state name:", stateNameMapping[stateName] || stateName);
+    }
   };
 
   if (loading) {
@@ -71,19 +144,9 @@ const MapPage = () => {
         </div>
 
         <IndiaMap
-            onStateClick={async (stateName) => {
-            try {
-              const res = await api.get(`/api/states/byName/${stateName}`);
-              setSelectedState(res.data._id);
-              setStateDetails(res.data);
-            } catch (error) {
-              console.error("State fetch error", error);
-              }
-            console.log("Clicked state:", stateName);
-          }
-          
-        }
-/>
+            onStateClick={handleMapClick}
+        />
+
 
 
         {/* CARD GRID */}
@@ -133,7 +196,7 @@ const MapPage = () => {
       </div>
 
       {/* RIGHT SIDE PANEL */}
-      <div className="w-96 bg-white shadow-2xl rounded-l-3xl p-6 border-l border-gray-300 hidden lg:block">
+      <div className="w-96 bg-white shadow-2xl rounded-l-3xl p-6 border-l border-gray-300 hidden lg:block mt-[272px]">
 
         {detailsLoading ? (
           <div className="text-center py-10">
@@ -175,11 +238,75 @@ const MapPage = () => {
               )}
 
               {stateDetails.cities?.length > 0 && (
-                <section className="pb-2">
+                <section className="pb-2 border-b border-gray-300">
                   <h3 className="font-semibold text-lg text-[#0E3B3A] mb-1">Major Cities</h3>
                   <ul className="list-disc ml-6 space-y-1">
                     {stateDetails.cities.map((item, i) => <li key={i}>{item}</li>)}
                   </ul>
+                </section>
+              )}
+
+              {innovations.length > 0 && (
+                <section className="pb-2 border-b border-gray-300">
+                  <h3 className="font-semibold text-lg text-[#0E3B3A] mb-1">Innovations</h3>
+                  <ul className="list-disc ml-6 space-y-1">
+                    {innovations.slice(0, 5).map((innovation, i) => (
+                      <li key={i} className="text-sm">
+                        <Link
+                          to="/innovations"
+                          className="text-[#b35a17] hover:text-[#9a4d14] hover:underline transition-colors"
+                        >
+                          {innovation.title}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                  {innovations.length > 5 && (
+                    <p className="text-xs text-gray-500 mt-1">And {innovations.length - 5} more...</p>
+                  )}
+                </section>
+              )}
+
+              {products.length > 0 && (
+                <section className="pb-2 border-b border-gray-300">
+                  <h3 className="font-semibold text-lg text-[#0E3B3A] mb-1">Products</h3>
+                  <ul className="list-disc ml-6 space-y-1">
+                    {products.slice(0, 5).map((product, i) => (
+                      <li key={i} className="text-sm">
+                        <Link
+                          to="/products"
+                          className="text-[#b35a17] hover:text-[#9a4d14] hover:underline transition-colors"
+                        >
+                          {product.name}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                  {products.length > 5 && (
+                    <p className="text-xs text-gray-500 mt-1">And {products.length - 5} more...</p>
+                  )}
+                </section>
+              )}
+
+              {articles.length > 0 && (
+                <section className="pb-2">
+                  <h3 className="font-semibold text-lg text-[#0E3B3A] mb-1">Articles</h3>
+                  <p className="text-xs text-gray-500 mb-2">Articles are not filtered by state yet</p>
+                  <ul className="list-disc ml-6 space-y-1">
+                    {articles.slice(0, 5).map((article, i) => (
+                      <li key={i} className="text-sm">
+                        <Link
+                          to="/articles"
+                          className="text-[#b35a17] hover:text-[#9a4d14] hover:underline transition-colors"
+                        >
+                          {article.title}
+                        </Link>
+                      </li>
+                    ))}
+                  </ul>
+                  {articles.length > 5 && (
+                    <p className="text-xs text-gray-500 mt-1">And {articles.length - 5} more...</p>
+                  )}
                 </section>
               )}
             </div>

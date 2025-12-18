@@ -16,6 +16,21 @@ router.get('/', async (req, res) => {
   }
 });
 
+// @desc    Get innovations by state
+// @route   GET /api/innovations/state/:stateName
+// @access  Public
+router.get('/state/:stateName', async (req, res) => {
+  try {
+    const { stateName } = req.params;
+    const innovations = await Innovation.find({
+      state: { $regex: new RegExp("^" + stateName + "$", "i") }
+    }).populate('submittedBy', 'name');
+    res.json(innovations);
+  } catch (error) {
+    res.status(500).json({ msg: 'Server error' });
+  }
+});
+
 // @desc    Get single innovation
 // @route   GET /api/innovations/:id
 // @access  Public
