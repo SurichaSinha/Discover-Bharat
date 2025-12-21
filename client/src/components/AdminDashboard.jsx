@@ -16,8 +16,8 @@ const AdminDashboard = () => {
   const fetchData = async () => {
     try {
       const [productsRes, statesRes] = await Promise.all([
-        api.get('/api/products'),
-        api.get('/api/states')
+        api.get('/products'),
+        api.get('/states')
       ]);
 
       setProducts(productsRes.data);

@@ -53,7 +53,7 @@ const Register = () => {
     setLoading(true);
 
     try {
-      const registerResponse = await api.post('/api/auth/register', formData);
+      const registerResponse = await api.post('/auth/register', formData);
 
       if (registerResponse.data?.msg === 'registered') {
         setMessage('Registration successful! Logging you in...');

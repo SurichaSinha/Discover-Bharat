@@ -13,7 +13,7 @@ const Footer = () => {
 
           {/* Branding */}
           <div className="text-center md:text-left">
-            <h3 className="text-2xl font-semibold text-[#e8d3b0]">Discover Bharat</h3>
+            <h3 className="text-2xl font-semibold text-[#e8d3b0]">Bharat Connect</h3>
             <p className="text-gray-400 text-sm mt-2 max-w-xs">
               Celebrating India's culture, heritage, and innovations.
             </p>
@@ -57,7 +57,7 @@ const Footer = () => {
         {/* Bottom Divider */}
         <div className="border-t border-gray-700 pt-4 text-center">
           <p className="text-gray-500 text-sm">
-            © {currentYear} Discover Bharat. All rights reserved.
+            © {currentYear} Bharat Connect. All rights reserved.
           </p>
         </div>
       </div>

@@ -38,7 +38,7 @@ const ArticlesPage = () => {
 
   const fetchArticles = async () => {
     try {
-      const response = await api.get('/api/articles');
+      const response = await api.get('/articles');
       setArticles(response.data);
       setFilteredArticles(response.data);
     } catch (error) {
@@ -82,7 +82,7 @@ const ArticlesPage = () => {
         authorName: user.name || user.email
       };
 
-      const response = await api.post('/api/articles', articleData);
+      const response = await api.post('/articles', articleData);
 
       if (response.status === 201) {
         setMessage('Article submitted successfully! It will be reviewed by our team before publication.');
