@@ -19,7 +19,7 @@ export const AuthProvider = ({ children }) => {
       console.log('AuthContext: Checking authentication status...');
       try {
         // Check if user is authenticated by calling /api/auth/me
-        const response = await api.get('/api/auth/me');
+        const response = await api.get('/auth/me');
         console.log('AuthContext: /api/auth/me response:', response.data);
         if (response.data) {
           setUser(response.data);
@@ -51,7 +51,7 @@ export const AuthProvider = ({ children }) => {
 
   const login = async (email, password) => {
     try {
-      const response = await api.post('/api/auth/login', { email, password });
+      const response = await api.post('/auth/login', { email, password });
 
       if (response.data.msg === 'logged in') {
         console.log('AuthContext: Login successful, user data:', response.data.user);
@@ -63,7 +63,7 @@ export const AuthProvider = ({ children }) => {
         } else {
           // Fallback: fetch user data from /me endpoint
           try {
-            const userResponse = await api.get('/api/auth/me');
+            const userResponse = await api.get('/auth/me');
             if (userResponse.data) {
               setUser(userResponse.data);
               localStorage.setItem('user', JSON.stringify(userResponse.data));
@@ -107,7 +107,7 @@ export const AuthProvider = ({ children }) => {
 
   const logout = async () => {
     try {
-      await api.get('/api/auth/logout');
+      await api.get('/auth/logout');
       setUser(null);
       localStorage.removeItem('user');
       return { success: true };

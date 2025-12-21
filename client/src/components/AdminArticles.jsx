@@ -16,7 +16,7 @@ const AdminArticles = () => {
 
   const fetchPendingArticles = async () => {
     try {
-      const response = await api.get('/api/articles?status=pending');
+      const response = await api.get('/articles?status=pending');
       setArticles(response.data);
     } catch (error) {
       console.error('Error fetching pending articles:', error);

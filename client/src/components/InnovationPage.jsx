@@ -28,7 +28,7 @@ const InnovationPage = () => {
   const fetchStates = useCallback(async () => {
     try {
       console.log('Fetching states...');
-      const response = await api.get('/api/states');
+      const response = await api.get('/states');
       console.log('States API response:', response.data);
 
       // Extract state names for dropdown
@@ -52,7 +52,7 @@ const InnovationPage = () => {
 
   const fetchInnovations = useCallback(async () => {
     try {
-      const response = await api.get('/api/innovations');
+      const response = await api.get('/innovations');
       const allInnovations = response.data;
 
       if (user) {
@@ -106,7 +106,7 @@ const InnovationPage = () => {
 
     setSubmitting(true);
     try {
-      const response = await api.post('/api/innovations', formData);
+      const response = await api.post('/innovations', formData);
       // Reset form
       setFormData({
         title: '',

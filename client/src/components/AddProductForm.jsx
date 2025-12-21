@@ -84,7 +84,7 @@ const AddProductForm = () => {
         imageUrl: formData.imageUrl || 'https://via.placeholder.com/400x300?text=No+Image' // Default placeholder
       };
 
-      await api.post('/api/products', productData);
+      await api.post('/products', productData);
 
       // Redirect to products page on success
       navigate('/products');
