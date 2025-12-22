@@ -113,7 +113,7 @@ REACT_APP_API_URL=http://localhost:5000
 #### Start Development Server
 ```bash
 npm start
-```
+
 Frontend will run on `http://localhost:3000`
 
 ## 🚀 Production Deployment
